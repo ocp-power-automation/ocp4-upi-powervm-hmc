@@ -1,0 +1,17 @@
+[bastion]
+localhost ansible_connection=local
+
+[bootstrap]
+{{ bootstrap.ipaddr }} ansible_connection=ssh ansible_user=core
+
+[masters]
+{% for master in masters %}
+{{ master.ipaddr }} ansible_connection=ssh ansible_user=core
+{% endfor %}
+
+{% if workers is defined %}
+[workers]
+{% for worker in workers %}
+{{ worker.ipaddr }} ansible_connection=ssh ansible_user=core
+{% endfor %}
+{% endif %}

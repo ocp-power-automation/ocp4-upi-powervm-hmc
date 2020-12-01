@@ -1,0 +1,13 @@
+---
+# file: setup the bastion for all services
+
+- name: Run ocp4-helpernode to configure helper node
+  import_playbook: ocp4-helpernode/tasks/main.yml
+
+- name: Update inventory to have all hosts defined in vars.yaml
+  hosts: bastion
+  gather_facts: no
+  any_errors_fatal: true
+  roles:
+  - update-inventory
+  

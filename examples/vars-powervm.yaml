@@ -1,0 +1,148 @@
+---
+disk: sda
+helper:
+  name: "helper"
+  ipaddr: "192.168.7.77"
+dns:
+  domain: "example.com"
+  clusterid: "ocp4"
+  forwarder1: "8.8.8.8"
+  forwarder2: "8.8.4.4"
+dhcp:
+  router: "192.168.7.1"
+  bcast: "192.168.7.255"
+  netmask: "255.255.255.0"
+  poolstart: "192.168.7.10"
+  poolend: "192.168.7.30"
+  ipid: "192.168.7.0"
+  netmaskid: "255.255.255.0"
+bootstrap:
+  name: "bootstrap"
+  ipaddr: "192.168.7.20"
+  macaddr: "52:54:00:60:72:67"
+  pvmcec: powersystem-name1
+  pvmlpar: bootstrap-lpar-name
+masters:
+  - name: "master0"
+    ipaddr: "192.168.7.21"
+    macaddr: "52:54:00:e7:9d:67"
+    pvmcec: powersystem-name1
+    pvmlpar: master0-lpar-name
+  - name: "master1"
+    ipaddr: "192.168.7.22"
+    macaddr: "52:54:00:80:16:23"
+    pvmcec: powersystem-name1
+    pvmlpar: master1-lpar-name
+  - name: "master2"
+    ipaddr: "192.168.7.23"
+    macaddr: "52:54:00:d5:1c:39"
+    pvmcec: powersystem-name1
+    pvmlpar: master2-lpar-name
+workers:
+  - name: "worker0"
+    ipaddr: "192.168.7.11"
+    macaddr: "52:54:00:f4:26:a1"
+    pvmcec: powersystem-name2
+    pvmlpar: worker0-lpar-name
+  - name: "worker1"
+    ipaddr: "192.168.7.12"
+    macaddr: "52:54:00:82:90:00"
+    pvmcec: powersystem-name2
+    pvmlpar: worker1-lpar-name
+
+
+ssh_gen_key: false
+ppc64le: true
+setup_registry:
+  deploy: false
+  autosync_registry: true
+  registry_image: docker.io/ibmcom/registry-ppc64le:2.6.2.5
+  local_repo: "ocp4/openshift4"
+  product_repo: "openshift-release-dev"
+  release_name: "ocp-release"
+  release_tag: "4.6.5-ppc64le"
+
+force_ocp_download: true
+######################
+# URL path to OCP download site
+ocp_base_url: "https://mirror.openshift.com/pub/openshift-v4/ppc64le"
+######################
+# RHCOS server for OCP
+# for Night build
+#ocp_rhcos_base: "dependencies/rhcos/pre-release"
+#ocp_rhcos_tag: "45.82.202006191459-0"
+# for release build
+ocp_rhcos_base: "dependencies/rhcos/4.6"
+ocp_rhcos_tag: "4.6.1"
+######### OCP 4.5 #############
+#ocp_bios: "{{ ocp_base_url}}/{{ ocp_rhcos_base }}/{{ ocp_rhcos_tag }}/rhcos-metal.ppc64le.raw.gz"
+#ocp_initramfs: "{{ ocp_base_url}}/{{ ocp_rhcos_base }}/{{ ocp_rhcos_tag }}/rhcos-installer-initramfs.ppc64le.img"
+#ocp_install_kernel: "{{ ocp_base_url}}/{{ ocp_rhcos_base }}/{{ ocp_rhcos_tag }}/rhcos-installer-kernel-ppc64le"
+######### OCP 4.6 #############
+ocp_bios: "{{ ocp_base_url}}/{{ ocp_rhcos_base }}/{{ ocp_rhcos_tag }}/rhcos-live-rootfs.ppc64le.img"
+ocp_initramfs: "{{ ocp_base_url}}/{{ ocp_rhcos_base }}/{{ ocp_rhcos_tag }}/rhcos-live-initramfs.ppc64le.img"
+ocp_install_kernel: "{{ ocp_base_url}}/{{ ocp_rhcos_base }}/{{ ocp_rhcos_tag }}/rhcos-live-kernel-ppc64le"
+########################
+# Client/install for OCP
+# for night build
+#ocp_client_base: "clients/ocp-dev-preview"
+#ocp_client_tag: "4.5.0-0.nightly-ppc64le-2020-07-12-172552"
+# for release build
+ocp_client_base: "clients/ocp"
+ocp_client_tag: "4.6.5"
+ocp_client: "{{ ocp_base_url}}/{{ ocp_client_base }}/{{ ocp_client_tag }}/openshift-client-linux.tar.gz"
+ocp_installer: "{{ ocp_base_url}}/{{ ocp_client_base }}/{{ ocp_client_tag }}/openshift-install-linux.tar.gz"
+
+helm_source: "https://get.helm.sh/helm-v3.2.4-linux-ppc64le.tar.gz"
+
+
+##########################################################
+# Variables defined for used by ocp4-upi-powervm-playbooks
+# pvmcec : The physical machine where the LPAR(node) is running on
+# pvmlpar: The LPAR(node) name in HMC
+### Note: pvmcec and pvmlpar are required for all cluster nodes defined in this vars.yaml file
+# pvm_hmc : The HMC host IP and user, it is used to run HMC CLI remotely, the helper need to be able to ssh to HMC without a password
+##########################################################
+pvm_hmc: hscroot@9.114.224.139
+
+##########################################################
+# Variables used by ocp4-playbook
+# workdir : is the working directory for openshift-install
+# pull_secret : pull-secret file for access openshift repo
+# public_ssh_key: the public key for ssh to access the cluster nodes from helper
+##########################################################
+install_config:
+  cluster_domain: "{{ dns.domain }}"
+  cluster_id: "{{ dns.clusterid }}"
+  pull_secret: '{{ lookup("file", "~/.openshift/pull-secret") | from_json | to_json }}'
+  public_ssh_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+workdir: "~/ocp4-pvm"
+storage_type: 
+log_level: info
+release_image_override: ""
+
+node_connection_timeout: 2700
+
+rhcos_kernel_options: []
+
+sysctl_tuned_options: false
+
+enable_local_registry: "{{ setup_registry.deploy }}"
+
+powervm_rmc: true
+
+chronyconfig:
+   enabled: false
+
+# setup the proxy server on bastion if set it to true
+setup_squid_proxy: false
+
+# using a predefined proxy server
+#proxy_url: "http://192.168.79.2:3128"
+#no_proxy: "127.0.0.1,localhost,192.168.0.0/16"
+proxy_url: ""
+no_proxy: ""
+
+#ocp_haproxy_vip: 9.47.89.173
+ocp_haproxy_vip: ""

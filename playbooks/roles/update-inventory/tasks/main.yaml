@@ -1,0 +1,104 @@
+---
+# tasks file for download the other required playbooks
+
+# - name: Clean up work directory
+#   file: 
+#     path: "{{ workdir }}/"
+#     state: absent
+
+- name: install jq
+  yum:
+    name: jq
+    state: latest
+
+- name: Set the default value for enable_local_registry  
+  set_fact: 
+    enable_local_registry: false
+
+- name: Set local registry variables
+  when: setup_registry.deploy
+  set_fact:
+    enable_local_registry: true
+    release_image_override: "registry.{{ dns.clusterid }}.{{ dns.domain | lower  }}:5000/{{ setup_registry.local_repo }}:{{ setup_registry.release_tag }}"
+
+- name: Create the inventory for ocp4-playbooks
+  template:
+    src: templates/inventory.j2
+    dest: "{{ playbook_dir }}/ocp4-playbooks/inventory"
+
+- name: Create the install_vars.yaml for ocp4-playbooks
+  template:
+    src: templates/install_vars.yaml.j2
+    dest: "{{ playbook_dir }}/ocp4-playbooks/install_vars.yaml"
+    
+# Add the hosts to inventory
+
+- name: Add the hosts to inventory with hostname
+  when: ssh_gen_key
+  block:
+  - name: Add bastion to inventory
+    add_host:
+      hostname: 'localhost'
+      ansible_connection: local
+      groups: bastion
+
+  - name: Add bootstrap to inventory
+    add_host:
+      hostname: '{{ bootstrap.name }}'
+      ansible_connection: ssh 
+      ansible_user: core
+      groups: bootstrap
+
+  - name: Add masters to inventory
+    add_host:
+      hostname: '{{ item.name }}'
+      ansible_connection: ssh 
+      ansible_user: core
+      groups: masters
+    with_items: "{{ masters }}"
+  
+  - name: Check if there is workers
+    when: (workers is defined) and (workers|length > 0)
+    block:
+    - name: Add workers to inventory
+      add_host:
+        hostname: '{{ item.name }}'
+        ansible_connection: ssh 
+        ansible_user: core
+        groups: workers
+      with_items: "{{ workers }}"
+
+- name: Add the hosts to inventory with host IP
+  when: not ssh_gen_key
+  block:
+  - name: Add bastion to inventory
+    add_host:
+      hostname: 'localhost'
+      ansible_connection: local
+      groups: bastion
+
+  - name: Add bootstrap to inventory
+    add_host:
+      hostname: '{{ bootstrap.ipaddr }}'
+      ansible_connection: ssh 
+      ansible_user: core
+      groups: bootstrap
+
+  - name: Add masters to inventory
+    add_host:
+      hostname: '{{ item.ipaddr }}'
+      ansible_connection: ssh 
+      ansible_user: core
+      groups: masters
+    with_items: "{{ masters }}"
+
+  - name: Check if there is workers
+    when: (workers is defined) and (workers|length > 0)
+    block:
+    - name: Add workers to inventory
+      add_host:
+        hostname: '{{ item.name }}'
+        ansible_connection: ssh 
+        ansible_user: core
+        groups: workers
+      with_items: "{{ workers }}"

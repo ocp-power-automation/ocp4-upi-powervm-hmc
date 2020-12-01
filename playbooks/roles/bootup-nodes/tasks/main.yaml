@@ -1,0 +1,39 @@
+---
+# tasks file for netboot nodes
+- name: netboot bootstrap node
+  shell: |
+    orig_mac={{ bootstrap.macaddr }}
+    pvm_mac=`echo ${orig_mac//:}`
+    pvmcec={{ bootstrap.pvmcec }}
+    pvmlpar={{ bootstrap.pvmlpar }}
+    pvm_profile=`ssh -o StrictHostKeyChecking=no {{ pvm_hmc }} "lssyscfg -r lpar -m ${pvmcec} --filter lpar_names=${pvmlpar} -F curr_profile"`
+    remote_cmd="lpar_netboot -f -t ent -m ${pvm_mac} -s auto -d auto ${pvmlpar} ${pvm_profile} ${pvmcec}"
+    ssh -o StrictHostKeyChecking=no {{ pvm_hmc }} "${remote_cmd}"
+  register: bootstrap_output
+
+- name: netboot masters nodes
+  shell: |
+    orig_mac={{ item.macaddr }}
+    pvm_mac=`echo ${orig_mac//:}`
+    pvmcec={{ item.pvmcec }}
+    pvmlpar={{ item.pvmlpar }}
+    pvm_profile=`ssh -o StrictHostKeyChecking=no {{ pvm_hmc }} "lssyscfg -r lpar -m ${pvmcec} --filter lpar_names=${pvmlpar} -F curr_profile"`
+    remote_cmd="lpar_netboot -f -t ent -m ${pvm_mac} -s auto -d auto ${pvmlpar} ${pvm_profile} ${pvmcec}"
+    ssh -o StrictHostKeyChecking=no {{ pvm_hmc }} "${remote_cmd}"
+  with_items: "{{ masters }}"
+  register: masters_output
+
+- name: Check if there is workers
+  when: (workers is defined) and (workers|length > 0)
+  block:
+    - name: netboot worker nodes
+      shell: |
+        orig_mac={{ item.macaddr }}
+        pvm_mac=`echo ${orig_mac//:}`
+        pvmcec={{ item.pvmcec }}
+        pvmlpar={{ item.pvmlpar }}
+        pvm_profile=`ssh -o StrictHostKeyChecking=no {{ pvm_hmc }} "lssyscfg -r lpar -m ${pvmcec} --filter lpar_names=${pvmlpar} -F curr_profile"`
+        remote_cmd="lpar_netboot -f -t ent -m ${pvm_mac} -s auto -d auto ${pvmlpar} ${pvm_profile} ${pvmcec}"
+        ssh -o StrictHostKeyChecking=no {{ pvm_hmc }} "${remote_cmd}"
+      with_items: "{{ workers }}"
+      register: workers_output

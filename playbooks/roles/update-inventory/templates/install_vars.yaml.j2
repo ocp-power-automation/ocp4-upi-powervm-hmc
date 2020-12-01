@@ -1,0 +1,27 @@
+---
+install_config:
+   cluster_domain: "{{ install_config.cluster_domain }}"
+   cluster_id: "{{ install_config.cluster_id }}"
+   pull_secret: '{{ install_config.pull_secret }}'
+   public_ssh_key: '{{ install_config.public_ssh_key }}'
+
+workdir: "{{ workdir }}"
+storage_type: "{{ storage_type }}"
+log_level: "{{ log_level }}"
+
+
+enable_local_registry: {{ enable_local_registry }}
+
+rhcos_kernel_options: {{ rhcos_kernel_options }}
+
+setup_squid_proxy: {{ setup_squid_proxy }}
+
+sysctl_tuned_options: {{ sysctl_tuned_options }}
+
+powervm_rmc: {{ powervm_rmc }}
+
+proxy_url: "{{ proxy_url }}"
+no_proxy: "{{ no_proxy }}"
+
+chronyconfig:
+   enabled: false
