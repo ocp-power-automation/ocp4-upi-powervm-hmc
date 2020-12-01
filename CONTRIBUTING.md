@@ -2,7 +2,7 @@
 
 This project is [Apache 2.0 Licenced](https://github.com/ocp-power-automation/ocp4-upi-powervm-hmc/blob/master/LICENSE) and welcomes external contributions. When contributing to this repository, please first discuss the change you wish to make via an [issue](https://github.com/ocp-power-automation/ocp4-upi-powervm-hmc/issues).
 
-Please note we have a [code of conduct](https://github.com/ocp-power-automation/ocp4-playbooks/blob/master/CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
+Please note we have a [code of conduct](https://github.com/ocp-power-automation/ocp4-upi-powervm-hmc/blob/master/CODE_OF_CONDUCT.md), please follow it in all your interactions with the project.
 
 # Issues
 
