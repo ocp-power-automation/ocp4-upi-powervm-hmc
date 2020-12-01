@@ -12,7 +12,7 @@ None
 Role Variables
 --------------
 
-  ocp_haproxy_vip: define the VIP for the haproxy
+  - ocp_haproxy_vip: define the VIP for the haproxy
 
 Dependencies
 ------------
@@ -21,7 +21,7 @@ None
 
 Example Playbook
 ----------------
-
+```
 - name: configures haproxy/VIP inside OCP
   hosts: bastion
   gather_facts: no
@@ -30,7 +30,7 @@ Example Playbook
     - include_role:
         name: ocp-haproxy-vip
       when: (ocp_haproxy_vip is defined) and (ocp_haproxy_vip | length > 0) 
-
+```
 License
 -------
 

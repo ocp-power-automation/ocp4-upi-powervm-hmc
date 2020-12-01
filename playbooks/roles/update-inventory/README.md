@@ -20,14 +20,14 @@ Dependencies
 
 Example Playbook
 ----------------
-
+```
     - name: Update inventory to have all hosts defined in vars.yaml
       hosts: bastion
       gather_facts: no
       any_errors_fatal: true
       roles:
       - update-inventory
-
+```
 License
 -------
 
