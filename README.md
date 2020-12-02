@@ -401,8 +401,6 @@ setup_squid_proxy: false
 proxy_url: ""
 no_proxy: ""
 
-#ocp_haproxy_vip: 9.47.89.173
-ocp_haproxy_vip: ""
 ```
 
 ## Run the playbook

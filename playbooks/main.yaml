@@ -42,13 +42,5 @@
 - name: Run ocp4-playbooks to install OCP
   import_playbook: ocp4-playbooks/playbooks/install.yaml
 
-- name: configures haproxy/VIP inside OCP
-  hosts: bastion
-  gather_facts: no
-  any_errors_fatal: true
-  tasks:
-    - include_role:
-        name: ocp-haproxy-vip
-      when: (ocp_haproxy_vip is defined) and (ocp_haproxy_vip | length > 0) 
 
 
