@@ -1,33 +1,5 @@
 ---
-# file: Create the ignitions and netboot the laprs
-
-- name: Clenaup old files
-  hosts: bastion
-  gather_facts: no
-  any_errors_fatal: false
-  tasks:
-    - name: Clean up work directory
-      file: 
-        path: "{{ workdir }}/"
-        state: absent
-
-- name: Update inventory to have all hosts defined in vars.yaml
-  hosts: bastion
-  gather_facts: no
-  any_errors_fatal: true
-  roles:
-  - update-inventory
-
-- name: Create OCP config
-  hosts: bastion
-  gather_facts: no
-  any_errors_fatal: true
-  tasks:
-    - include_role:
-        name: ocp4-playbooks/playbooks/roles/ocp-config
-      vars:
-        master_count: "{{ groups['masters'] | length }}"
-        worker_count: "{{ groups['workers'] | default([]) | length }}"
+# file: netboot the laprs
     
 - name: Net boot all cluster nodes
   hosts: bastion
