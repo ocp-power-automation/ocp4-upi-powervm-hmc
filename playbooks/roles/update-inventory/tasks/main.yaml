@@ -38,7 +38,7 @@
   block:
   - name: Add bastion to inventory
     add_host:
-      hostname: 'localhost'
+      hostname: '{{ helper.name }}'
       ansible_connection: local
       groups: bastion
 
@@ -73,7 +73,7 @@
   block:
   - name: Add bastion to inventory
     add_host:
-      hostname: 'localhost'
+      hostname: '{{ helper.ipaddr }}'
       ansible_connection: local
       groups: bastion
 
