@@ -1,0 +1,25 @@
+{
+	"ignition": {
+		"version": "3.1.0"
+	},
+	"storage": {
+		"files": [
+			{
+				"path": "/usr/local/bin/post-install-hook",
+				"contents": {
+					"source": "data:,%23!%2Fbin%2Fbash%0Abootlist%20-m%20normal%20-o%20{{ disk }}%0A"
+				},
+				"mode": 493
+			}
+		]
+	},
+	"systemd": {
+		"units": [
+			{
+				"contents": "[Unit]\nDescription=Run after install\nAfter=coreos-installer.service\nBefore=coreos-installer.target\n\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/post-install-hook\n\n[Install]\nRequiredBy=coreos-installer.target\n",
+				"enabled": true,
+				"name": "post-install-hook.service"
+			}
+		]
+	}
+}

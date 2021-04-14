@@ -102,3 +102,11 @@
         ansible_user: core
         groups: workers
       with_items: "{{ workers }}"
+
+- name: Copy first-boot-ppc64le.ign to /www/html/ignition
+  template:
+    src: templates/first-boot-ppc64le.ign.j2
+    dest: "/var/www/html/ignition/first-boot-ppc64le.ign"
+
+- name: Update grub.cfg with first-boot ignition
+  shell: sed -i 's/coreos.inst=yes coreos/coreos.inst=yes ignition.platform.id=metal ignition.firstboot ignition.config.url=http:\/\/{{ helper.ipaddr }}:8080\/ignition\/first-boot-ppc64le.ign coreos/g' /var/lib/tftpboot/boot/grub2/grub.cfg
