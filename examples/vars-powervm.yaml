@@ -55,12 +55,6 @@ ssh_gen_key: false
 ppc64le: true
 setup_registry:
   deploy: false
-  autosync_registry: true
-  registry_image: docker.io/ibmcom/registry-ppc64le:2.6.2.5
-  local_repo: "ocp4/openshift4"
-  product_repo: "openshift-release-dev"
-  release_name: "ocp-release"
-  release_tag: "4.7.7-ppc64le"
 
 force_ocp_download: true
 ######################
@@ -133,7 +127,12 @@ enable_local_registry: "{{ setup_registry.deploy }}"
 powervm_rmc: true
 
 chronyconfig:
-   enabled: false
+  enabled: false
+  content:
+    - server: 0.centos.pool.ntp.org
+      options: iburst
+    - server: 1.centos.pool.ntp.org
+      options: iburst
 
 # setup the proxy server on bastion if set it to true
 setup_squid_proxy: false

@@ -1,0 +1,2 @@
+[bastion]
+192.168.7.77 ansible_connection=local

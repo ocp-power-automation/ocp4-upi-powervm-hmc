@@ -1,5 +1,5 @@
 [bastion]
-localhost ansible_connection=local
+{{ helper.ipaddr }} ansible_connection=local
 
 [bootstrap]
 {{ bootstrap.ipaddr }} ansible_connection=ssh ansible_user=core

@@ -4,7 +4,7 @@ This guide will get you up and running on PowerVM server managed using [HMC](htt
 
 The playbooks will use the following projects:
 - [ocp4-helpernode](https://github.com/RedHatOfficial/ocp4-helpernode.git) to set up an "all-in-one" node (called ocp4-helpernode), that has all the infrastructure/services in order to install OpenShift 4.
-- [ocp4-playbooks](https://github.com/ocp-power-automation/ocp4-playbooks) to create the ignition and to monitor OCP installation prograss and configure the cluster nodes as defined in `vars.yaml`.
+- [ocp4-playbooks](https://github.com/ocp-power-automation/ocp4-playbooks) to create the ignition and to monitor OCP installation progress and configure the cluster nodes as defined in `vars.yaml`.
 
 This playbook will boot up all cluster node with `lpar_netboot` on HMC to bootp in order to install Red Hat CoreOS (RHCOS) to disk and reboot from RHCOS to run ignition to setup the RHCOS. Then it will install the OpenShift 4 cluster with 3 master nodes and 2 worker nodes on the RHCOS LPARs. After you run the playbook, you'll be ready to logon to the OpenShift cluster.
 
@@ -22,8 +22,8 @@ It's important to note that you can delegate DNS to the ocp4-helpernode if you d
 
 For example; if you want a `$CLUSTERID` of **ocp4**, and you have a `$DOMAIN` of **example.com**. Then you will delegate `ocp4.example.com` to this ocp4-helpernode.
 
-## Minimum resource requirments
-Each LPAR must meet the minimum esource requirements
+## Minimum resource requirements
+Each LPAR must meet the minimum resource requirements
 |LPAR           |OS      | vCPU | Memory | Storage  |
 |---------------|--------|-----:|-------:|---------:|
 |Bastion/Helper |RHEL 8.x|2     | 16GB   | 120GB    |
@@ -232,14 +232,22 @@ $ cd ocp4-upi-powervm-hmc/
 $ git submodule update --init --recursive --remote 
 ```
 
-## Create installation variable file `vars-powervm.yaml` in `ocp4-upi-powervm-hmc` directory
-
+## Create installation variable file `vars-powervm.yaml` and `inventory` in `ocp4-upi-powervm-hmc` directory
+Here are sample files, you can modify them or use following templates to create your own:
 ```shell
 $ cp examples/vars-powervm.yaml .
+$ cp examples/inventory .
 ```
 
-> :warning: Make sure you update all \<values\> which are marked with "less than" and "greater than" chars in this `vars-powervm.yaml` file.
+> :warning: Make sure you update all \<values\> which are marked with "less than" and "greater than" chars in following `inventory` and `vars-powervm.yaml` file.
 
+Template for `inventory`:
+
+```
+[bastion]
+<helper.ipaddr> ansible_connection=local
+```
+Template for `vars-powervm.yaml`:
 ```
 ---
 
@@ -251,7 +259,7 @@ pvm_hmc: <hmc_user>@<hmc_ip>
 
 ############################
 # OCP4 helper node variables
-# Docu: https://github.com/RedHatOfficial/ocp4-helpernode/blob/master/docs/vars-doc.md
+# Doc: https://github.com/RedHatOfficial/ocp4-helpernode/blob/master/docs/vars-doc.md
 # pvmcec : The physical machine where the LPAR(node) is running on
 # pvmlpar: The LPAR(node) name in HMC
 ### Note: pvmcec and pvmlpar are required for all cluster nodes defined in this yaml file
@@ -322,15 +330,14 @@ ppc64le: true
 
 setup_registry:
   deploy: false
-  autosync_registry: true
-  registry_image: docker.io/ibmcom/registry-ppc64le:2.6.2.5
-  local_repo: "ocp4/openshift4"
-  product_repo: "openshift-release-dev"
-  release_name: "ocp-release"
-  release_tag: "4.6.5-ppc64le"
   
 chronyconfig:
-   enabled: false
+  enabled: false
+  content:
+    - server: 0.centos.pool.ntp.org
+      options: iburst
+    - server: 1.centos.pool.ntp.org
+      options: iburst
 
 ###############################
 # URL path to OCP download site
@@ -362,7 +369,7 @@ force_ocp_download: false
 
 ##########################################################
 # Variables used by ocp4-playbook
-# Docu: https://github.com/ocp-power-automation/ocp4-playbooks
+# Doc: https://github.com/ocp-power-automation/ocp4-playbooks
 # pull_secret : pull-secret file for access openshift repo
 # public_ssh_key: the public key for ssh to access the cluster nodes from helper
 ##########################################################
@@ -396,7 +403,7 @@ setup_squid_proxy: false
 
 #################################
 # using a predefined proxy server
-#proxy_url: "http://192.168.79.2:3128"
+#proxy_url: "<http://192.168.79.2:3128>"
 #no_proxy: "127.0.0.1,localhost,192.168.0.0/16"
 proxy_url: ""
 no_proxy: ""
