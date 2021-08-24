@@ -1,4 +1,7 @@
 ---
+# The value for disk:
+#  SAN/iSCSI : sda -- this is default
+#  NVMe : nvme0n1 
 disk: sda
 helper:
   name: "helper"
