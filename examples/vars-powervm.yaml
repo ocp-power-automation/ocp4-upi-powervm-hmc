@@ -55,6 +55,12 @@ ssh_gen_key: false
 ppc64le: true
 setup_registry:
   deploy: false
+  autosync_registry: true
+  registry_image: docker.io/ibmcom/registry-ppc64le:2.6.2.5
+  local_repo: "ocp4/openshift4"
+  product_repo: "openshift-release-dev"
+  release_name: "ocp-release"
+  release_tag: "4.7.7-ppc64le"
 
 force_ocp_download: true
 ######################
@@ -143,3 +149,12 @@ setup_squid_proxy: false
 proxy_url: ""
 no_proxy: ""
 
+# Use NFS for OCP nodes if defined
+#storage_type: nfs
+
+# Define external NFS, don't define this section if use bastion as NFS server
+#   server -- is the server IP
+#   path -- is the NFS mount point
+#nfs:
+#  server: "192.168.79.2"
+#  path: "/export"

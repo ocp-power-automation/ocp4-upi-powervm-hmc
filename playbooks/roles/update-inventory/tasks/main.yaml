@@ -110,3 +110,12 @@
 
 - name: Update grub.cfg with first-boot ignition
   shell: sed -i 's/coreos.inst=yes coreos/coreos.inst=yes ignition.platform.id=metal ignition.firstboot ignition.config.url=http:\/\/{{ helper.ipaddr }}:8080\/ignition\/first-boot-ppc64le.ign coreos/g' /var/lib/tftpboot/boot/grub2/grub.cfg
+
+# - name: Copy machineconfig files generated from ocp4-helpernode to ocp4-playbooks
+#   copy:
+#     src: "{{ playbook_dir }}/ocp4-helpernode/machineconfig"
+#     dest: "/machineconfig"
+#     remote_src: yes
+#   with_items:
+#       - "*-chrony-configuration.yaml"
+#   when: chronyconfig.enabled
