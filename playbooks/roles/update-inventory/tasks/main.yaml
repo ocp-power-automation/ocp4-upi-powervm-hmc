@@ -119,3 +119,19 @@
 #   with_items:
 #       - "*-chrony-configuration.yaml"
 #   when: chronyconfig.enabled
+
+- name: create /etc/hosts entry
+  copy:
+    dest: "{{ playbook_dir }}/../etc.hosts.entry"
+    content: >
+      {{ helper.ipaddr }} 
+      helper.{{ dns.clusterid }}.{{ dns.domain }} 
+      api.{{ dns.clusterid }}.{{ dns.domain }} 
+      console-openshift-console.apps.{{ dns.clusterid }}.{{ dns.domain }} 
+      oauth-openshift.apps.{{ dns.clusterid }}.{{ dns.domain }} 
+      integrated-oauth-server-openshift-authentication.apps.{{ dns.clusterid }}.{{ dns.domain }} 
+      prometheus-k8s-openshift-monitoring.apps.{{ dns.clusterid }}.{{ dns.domain }} 
+      thanos-querier-openshift-monitoring.apps.{{ dns.clusterid }}.{{ dns.domain }} 
+      alertmanager-main-openshift-monitoring.apps.{{ dns.clusterid }}.{{ dns.domain }} 
+      grafana-openshift-monitoring.apps.{{ dns.clusterid }}.{{ dns.domain }} 
+      example.apps.{{ dns.clusterid }}.{{ dns.domain }}
