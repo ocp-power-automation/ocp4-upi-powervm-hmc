@@ -14,16 +14,18 @@ enable_local_registry: {{ enable_local_registry }}
 
 rhcos_kernel_options: {{ rhcos_kernel_options }}
 
-setup_squid_proxy: {{ setup_squid_proxy }}
-
 sysctl_tuned_options: {{ sysctl_tuned_options }}
 
 dhcp_shared_network: {{ dhcp_shared_network }}
 
 powervm_rmc: {{ powervm_rmc }}
 
+setup_squid_proxy: {{ setup_squid_proxy }}
+
+{% if proxy_url is defined %}
 proxy_url: "{{ proxy_url }}"
 no_proxy: "{{ no_proxy }}"
+{% endif %}
 
 chronyconfig:
    enabled: false
