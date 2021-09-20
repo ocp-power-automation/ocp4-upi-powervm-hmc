@@ -133,9 +133,6 @@ sysctl_tuned_options: false
 
 enable_local_registry: "{{ setup_registry.deploy }}"
 
-# set to true if more than one OCP in the same subnet
-dhcp_shared_network: false
-
 powervm_rmc: true
 
 chronyconfig:

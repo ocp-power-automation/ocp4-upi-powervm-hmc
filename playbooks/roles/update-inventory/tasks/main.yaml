@@ -21,6 +21,29 @@
     enable_local_registry: true
     release_image_override: "registry.{{ dns.clusterid }}.{{ dns.domain | lower  }}:5000/{{ setup_registry.local_repo }}:{{ setup_registry.release_tag }}"
 
+- name: Find DHCP pool block
+  shell: grep 'pool {' /etc/dhcp/dhcpd.conf
+  ignore_errors: yes
+  register: dhcp_pool
+
+- name: Update DHCP server config
+  when: dhcp_pool.rc == 0
+  block:
+  - name: Remove pool, range and deny statements
+    shell: |
+      sed -i.bak '/pool {/d' /etc/dhcp/dhcpd.conf
+      sed -i '/range /d' /etc/dhcp/dhcpd.conf
+      sed -i '$d' /etc/dhcp/dhcpd.conf
+      sed -i 's/deny unknown-clients/#deny unknown-clients/' /etc/dhcp/dhcpd.conf
+    args:
+      warn: false
+
+  - name: restart dhcpd
+    service:
+      name: dhcpd
+      state: restarted
+      enabled: yes
+
 - name: Create the inventory for ocp4-playbooks
   template:
     src: templates/inventory.j2
