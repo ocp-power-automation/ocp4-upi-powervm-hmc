@@ -7,7 +7,7 @@
     pvmcec={{ bootstrap.pvmcec }}
     pvmlpar={{ bootstrap.pvmlpar }}
     pvm_profile=`ssh -o StrictHostKeyChecking=no {{ pvm_hmc }} "lssyscfg -r lpar -m ${pvmcec} --filter lpar_names=${pvmlpar} -F curr_profile"`
-    remote_cmd="lpar_netboot -f -t ent -m ${pvm_mac} -s auto -d auto ${pvmlpar} ${pvm_profile} ${pvmcec}"
+    remote_cmd="lpar_netboot -v -i -D -f -t ent -m ${pvm_mac} -s auto -d auto -S {{ helper.ipaddr }} -C {{ bootstrap.ipaddr }} -G {{ dhcp.router }}  ${pvmlpar} ${pvm_profile} ${pvmcec}"
     ssh -o StrictHostKeyChecking=no {{ pvm_hmc }} "${remote_cmd}"
   register: bootstrap_output
 
@@ -18,7 +18,7 @@
     pvmcec={{ item.pvmcec }}
     pvmlpar={{ item.pvmlpar }}
     pvm_profile=`ssh -o StrictHostKeyChecking=no {{ pvm_hmc }} "lssyscfg -r lpar -m ${pvmcec} --filter lpar_names=${pvmlpar} -F curr_profile"`
-    remote_cmd="lpar_netboot -f -t ent -m ${pvm_mac} -s auto -d auto ${pvmlpar} ${pvm_profile} ${pvmcec}"
+    remote_cmd="lpar_netboot -v -i -D -f -t ent -m ${pvm_mac} -s auto -d auto -S {{ helper.ipaddr }} -C {{ item.ipaddr }} -G {{ dhcp.router }} ${pvmlpar} ${pvm_profile} ${pvmcec}"
     ssh -o StrictHostKeyChecking=no {{ pvm_hmc }} "${remote_cmd}"
   with_items: "{{ masters }}"
   register: masters_output
@@ -33,7 +33,7 @@
         pvmcec={{ item.pvmcec }}
         pvmlpar={{ item.pvmlpar }}
         pvm_profile=`ssh -o StrictHostKeyChecking=no {{ pvm_hmc }} "lssyscfg -r lpar -m ${pvmcec} --filter lpar_names=${pvmlpar} -F curr_profile"`
-        remote_cmd="lpar_netboot -f -t ent -m ${pvm_mac} -s auto -d auto ${pvmlpar} ${pvm_profile} ${pvmcec}"
+        remote_cmd="lpar_netboot -v -i -D -f -t ent -m ${pvm_mac} -s auto -d auto -S {{ helper.ipaddr }} -C {{ item.ipaddr }} -G {{ dhcp.router }} ${pvmlpar} ${pvm_profile} ${pvmcec}"
         ssh -o StrictHostKeyChecking=no {{ pvm_hmc }} "${remote_cmd}"
       with_items: "{{ workers }}"
       register: workers_output
