@@ -65,7 +65,7 @@ setup_registry:
   product_repo: "openshift-release-dev"
   release_name: "ocp-release"
   release_tag: "4.7.7-ppc64le"
-  #release_name: "ocp-release-night"
+  #release_name: "ocp-release-nightly"
   #release_tag: "4.5.0-0.nightly-ppc64le-2020-07-12-172552"
 
   mirror_from_file: false
