@@ -56,6 +56,7 @@ workers:
 
 ssh_gen_key: false
 ppc64le: true
+# Note: autosync_registry and mirror_from_file only one can true or both false.
 setup_registry:
   deploy: false
   autosync_registry: true
@@ -64,8 +65,13 @@ setup_registry:
   product_repo: "openshift-release-dev"
   release_name: "ocp-release"
   release_tag: "4.7.7-ppc64le"
+  #release_name: "ocp-release-night"
+  #release_tag: "4.5.0-0.nightly-ppc64le-2020-07-12-172552"
 
-force_ocp_download: true
+  mirror_from_file: false
+  mirror_archive: http://mirror.host.domain/openshift-v4/OCP/mirror-4.8.13.tar
+
+force_ocp_download: false
 ######################
 # URL path to OCP download site
 ocp_base_url: "https://mirror.openshift.com/pub/openshift-v4/ppc64le"

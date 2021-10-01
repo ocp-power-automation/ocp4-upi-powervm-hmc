@@ -164,8 +164,6 @@ Change SELinux to permissive. The OpenShift installation fails if SELinux is dis
 
 ```shell
 $ vi /etc/selinux/config # change "SELINUX=disabled" to "SELINUX=permissive"
-$ setenforce Permissive
-$ vi /etc/default/grub  # change "selinux=0" to "selinux=1"
 $ grub2-mkconfig
 $ reboot
 $ getenforce
@@ -227,7 +225,7 @@ ocp4-worker1,664A949F5F0B
 ## Download all playbooks for the OpenShift installation
 
 ```shell
-$ git clone git@github.com:ocp-power-automation/ocp4-upi-powervm-hmc.git
+$ git clone https://github.com/ocp-power-automation/ocp4-upi-powervm-hmc.git
 $ cd ocp4-upi-powervm-hmc/
 $ git submodule update --init --recursive --remote 
 ```

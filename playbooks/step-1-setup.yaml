@@ -4,31 +4,35 @@
 - name: Run ocp4-helpernode to configure helper node
   import_playbook: ocp4-helpernode/tasks/main.yml
 
-- name: Clenaup old files
-  hosts: bastion
-  gather_facts: no
-  any_errors_fatal: false
-  tasks:
-    - name: Clean up work directory
-      file: 
-        path: "{{ workdir }}/"
-        state: absent
-
-- name: Update inventory to have all hosts defined in vars.yaml
-  hosts: bastion
-  gather_facts: no
-  any_errors_fatal: true
-  roles:
-  - update-inventory
-
-- name: Create OCP config
+- name: Import OCP images from disk to local registry
   hosts: bastion
   gather_facts: no
   any_errors_fatal: true
   tasks:
-    - include_role:
-        name: ocp4-playbooks/playbooks/roles/ocp-config
-      vars:
-        master_count: "{{ groups['masters'] | length }}"
-        worker_count: "{{ groups['workers'] | default([]) | length }}"
-  
+    - name: Restore Mirror registry
+      when: (setup_registry.mirror_from_file is defined) and setup_registry.mirror_from_file
+      block: 
+      - name: Clean up /root/mirror directory
+        file: 
+          path: "/root/mirror/"
+          state: absent
+      - name: Downloading OCP release image archive file
+        get_url:
+          url: "{{ setup_registry.mirror_archive }}"
+          dest: /root/ocp_mirror.tag.gz
+      - name: Unarchiving ocp registry mirror file
+        unarchive:
+          src: /root/ocp_mirror.tag.gz
+          dest: /root
+          remote_src: yes
+      - name: Restore registry from files
+        shell: oc image mirror -a ~/.openshift/pull-secret-updated \
+          --from-dir=/root/mirror "file://openshift/release:{{ setup_registry.release_tag }}*" \
+          {{ local_registry }}/{{ setup_registry.local_repo }}
+        register: file_registry
+      - name: Generate Local Registry information
+        copy:
+          content: "{{ file_registry.stdout }}"
+          dest: ../postrun-mirror-registry-info
+      - name: Process Local Registry information
+        shell: "sed -i '1,/Mirroring completed/d' ../postrun-mirror-registry-info"

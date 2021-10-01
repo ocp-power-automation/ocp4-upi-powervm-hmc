@@ -1,3 +1,7 @@
 ---
 # defaults file
+release_image_override: ""
+proxy_url: ""
+no_proxy: ""
+enable_local_registry: false
 
