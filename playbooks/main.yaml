@@ -20,7 +20,7 @@
   any_errors_fatal: true
   tasks:
     - name: Restore Mirror registry
-      when: (setup_registry.mirror_from_file is defined) and setup_registry.mirror_from_file
+      when: setup_registry.deploy and (setup_registry.mirror_from_file is defined) and setup_registry.mirror_from_file
       block: 
       - name: Clean up /root/mirror directory
         file: 
@@ -29,10 +29,10 @@
       - name: Downloading OCP release image archive file
         get_url:
           url: "{{ setup_registry.mirror_archive }}"
-          dest: /root/ocp_mirror.tag.gz
+          dest: /root/ocp_mirror.tgz
       - name: Unarchiving ocp registry mirror file
         unarchive:
-          src: /root/ocp_mirror.tag.gz
+          src: /root/ocp_mirror.tgz
           dest: /root
           remote_src: yes
       - name: Restore registry from files

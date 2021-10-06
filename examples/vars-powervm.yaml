@@ -71,7 +71,7 @@ setup_registry:
   mirror_from_file: false
   mirror_archive: http://mirror.host.domain/openshift-v4/OCP/mirror-4.8.13.tar
 
-force_ocp_download: false
+force_ocp_download: true
 ######################
 # URL path to OCP download site
 ocp_base_url: "https://mirror.openshift.com/pub/openshift-v4/ppc64le"
@@ -141,13 +141,6 @@ enable_local_registry: "{{ setup_registry.deploy }}"
 
 powervm_rmc: true
 
-chronyconfig:
-  enabled: false
-  content:
-    - server: 0.centos.pool.ntp.org
-      options: iburst
-    - server: 1.centos.pool.ntp.org
-      options: iburst
 
 # setup the proxy server on bastion if set it to true
 setup_squid_proxy: false
