@@ -23,9 +23,7 @@
       when: setup_registry.deploy and (setup_registry.mirror_from_file is defined) and setup_registry.mirror_from_file
       block: 
       - name: Clean up /root/mirror directory
-        file: 
-          path: "/root/mirror/"
-          state: absent
+        shell: rm -rf /root/mirror* /root/ocp_mirror.tgz
       - name: Downloading OCP release image archive file
         get_url:
           url: "{{ setup_registry.mirror_archive }}"
