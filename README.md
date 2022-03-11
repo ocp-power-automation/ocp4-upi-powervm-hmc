@@ -227,7 +227,7 @@ ocp4-worker1,664A949F5F0B
 ```shell
 $ git clone https://github.com/ocp-power-automation/ocp4-upi-powervm-hmc.git
 $ cd ocp4-upi-powervm-hmc/
-$ git submodule update --init --recursive --remote 
+$ git submodule sync; git submodule update --init 
 ```
 
 ## Create installation variable file `vars-powervm.yaml` and `inventory` in `ocp4-upi-powervm-hmc` directory
