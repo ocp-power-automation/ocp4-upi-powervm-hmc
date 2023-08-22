@@ -56,6 +56,7 @@ workers:
 
 ssh_gen_key: false
 ppc64le: true
+baremetal: false
 # Note: autosync_registry and mirror_from_file only one can true or both false.
 setup_registry:
   deploy: false
@@ -64,7 +65,7 @@ setup_registry:
   local_repo: "ocp4/openshift4"
   product_repo: "openshift-release-dev"
   release_name: "ocp-release"
-  release_tag: "4.7.7-ppc64le"
+  release_tag: "4.13.9-ppc64le"
   #release_name: "ocp-release-nightly"
   #release_tag: "4.5.0-0.nightly-ppc64le-2020-07-12-172552"
 
@@ -81,13 +82,8 @@ ocp_base_url: "https://mirror.openshift.com/pub/openshift-v4/ppc64le"
 #ocp_rhcos_base: "dependencies/rhcos/pre-release"
 #ocp_rhcos_tag: "45.82.202006191459-0"
 # for release build
-ocp_rhcos_base: "dependencies/rhcos/4.8"
-ocp_rhcos_tag: "4.8.2"
-######### OCP 4.5 #############
-#ocp_bios: "{{ ocp_base_url}}/{{ ocp_rhcos_base }}/{{ ocp_rhcos_tag }}/rhcos-metal.ppc64le.raw.gz"
-#ocp_initramfs: "{{ ocp_base_url}}/{{ ocp_rhcos_base }}/{{ ocp_rhcos_tag }}/rhcos-installer-initramfs.ppc64le.img"
-#ocp_install_kernel: "{{ ocp_base_url}}/{{ ocp_rhcos_base }}/{{ ocp_rhcos_tag }}/rhcos-installer-kernel-ppc64le"
-######### OCP 4.6 or above #############
+ocp_rhcos_base: "dependencies/rhcos/4.13"
+ocp_rhcos_tag: "latest"
 ocp_bios: "{{ ocp_base_url}}/{{ ocp_rhcos_base }}/{{ ocp_rhcos_tag }}/rhcos-live-rootfs.ppc64le.img"
 ocp_initramfs: "{{ ocp_base_url}}/{{ ocp_rhcos_base }}/{{ ocp_rhcos_tag }}/rhcos-live-initramfs.ppc64le.img"
 ocp_install_kernel: "{{ ocp_base_url}}/{{ ocp_rhcos_base }}/{{ ocp_rhcos_tag }}/rhcos-live-kernel-ppc64le"
@@ -98,7 +94,7 @@ ocp_install_kernel: "{{ ocp_base_url}}/{{ ocp_rhcos_base }}/{{ ocp_rhcos_tag }}/
 #ocp_client_tag: "4.5.0-0.nightly-ppc64le-2020-07-12-172552"
 # for release build
 ocp_client_base: "clients/ocp"
-ocp_client_tag: "4.8.13"
+ocp_client_tag: "latest-4.13"
 ocp_client: "{{ ocp_base_url}}/{{ ocp_client_base }}/{{ ocp_client_tag }}/openshift-client-linux.tar.gz"
 ocp_installer: "{{ ocp_base_url}}/{{ ocp_client_base }}/{{ ocp_client_tag }}/openshift-install-linux.tar.gz"
 
@@ -112,7 +108,7 @@ helm_source: "https://get.helm.sh/helm-v3.2.4-linux-ppc64le.tar.gz"
 ### Note: pvmcec and pvmlpar are required for all cluster nodes defined in this vars.yaml file
 # pvm_hmc : The HMC host IP and user, it is used to run HMC CLI remotely, the helper need to be able to ssh to HMC without a password
 ##########################################################
-pvm_hmc: hscroot@9.114.224.139
+pvm_hmc: hmcuser@192.168.7.100
 
 ##########################################################
 # Variables used by ocp4-playbook
