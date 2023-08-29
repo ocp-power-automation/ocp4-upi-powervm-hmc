@@ -56,7 +56,7 @@ workers:
 
 ssh_gen_key: false
 ppc64le: true
-baremetal: false
+baremetal: true
 # Note: autosync_registry and mirror_from_file only one can true or both false.
 setup_registry:
   deploy: false
