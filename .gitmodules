@@ -1,7 +1,8 @@
 [submodule "playbooks/ocp4-playbooks"]
 	path = playbooks/ocp4-playbooks
 	url = https://github.com/ocp-power-automation/ocp4-playbooks.git
-	branch = master
+	branch = main
 [submodule "playbooks/ocp4-helpernode"]
 	path = playbooks/ocp4-helpernode
-	url = https://github.com/redhat-cop/ocp4-helpernode.git
+  url = https://github.com/redhat-cop/ocp4-helpernode.git
+  branch = main
