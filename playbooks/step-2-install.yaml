@@ -6,10 +6,10 @@
   any_errors_fatal: false
   tasks:
     - name: Clean up work directory
-      file: 
+      file:
         path: "{{ workdir }}/"
         state: absent
-        
+
 - name: Update inventory to have all hosts defined in vars.yaml
   hosts: bastion
   gather_facts: no
@@ -36,4 +36,4 @@
   - bootup-nodes
 
 - name: Run ocp4-playbooks to install OCP
-  import_playbook: ocp4-playbooks/playbooks/install.yaml
+  import_playbook: ocp4-playbooks/playbooks/install-complete.yaml

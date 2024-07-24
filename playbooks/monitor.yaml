@@ -1,6 +1,6 @@
 ---
 # file: monitor the installation progress and config the nodes
-        
+
 - name: Update inventory to have all hosts defined in vars.yaml
   hosts: bastion
   gather_facts: no
@@ -9,7 +9,7 @@
   - update-inventory
 
 - name: Run ocp4-playbooks to install OCP
-  import_playbook: ocp4-playbooks/playbooks/install.yaml
+  import_playbook: ocp4-playbooks/playbooks/install-compete.yaml
 
 
 
