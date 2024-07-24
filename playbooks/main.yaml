@@ -7,7 +7,7 @@
   any_errors_fatal: false
   tasks:
     - name: Clean up work directory
-      file: 
+      file:
         path: "{{ workdir }}/"
         state: absent
 
@@ -21,7 +21,7 @@
   tasks:
     - name: Restore Mirror registry
       when: setup_registry.deploy and (setup_registry.mirror_from_file is defined) and setup_registry.mirror_from_file
-      block: 
+      block:
       - name: Clean up /root/mirror directory
         shell: rm -rf /root/mirror* /root/ocp_mirror.tgz
       - name: Downloading OCP release image archive file
@@ -62,7 +62,7 @@
       vars:
         master_count: "{{ groups['masters'] | length }}"
         worker_count: "{{ groups['workers'] | default([]) | length }}"
-    
+
 - name: Net boot all cluster nodes
   hosts: bastion
   gather_facts: no
@@ -71,4 +71,4 @@
   - bootup-nodes
 
 - name: Run ocp4-playbooks to install OCP
-  import_playbook: ocp4-playbooks/playbooks/install.yaml
+  import_playbook: ocp4-playbooks/playbooks/install-complete.yaml
